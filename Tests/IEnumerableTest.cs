@@ -3,6 +3,24 @@ namespace Tests;
 [TestClass]
 public class IEnumerableTest
 {
+
+    [TestMethod]
+    public void Extensions()
+    {
+        var chaine = "lkjdflqsjqsl jklqskj dljk qsdljk qsjkl jkl q";
+        var chaineRaccourcie = MesExtensions.Ellipsis(chaine,10); // lkjdflq...
+        // Syntaxic sugar
+        chaineRaccourcie = chaine.Ellipsis(10);
+        
+        // Obtenir les nombres par tableau de 10
+        var numbers = Fibo().Buffer(10);
+
+        foreach(var tab in numbers)
+        {
+
+        }
+    }
+
     [TestMethod]
     public void Enumeration()
     {
@@ -56,3 +74,4 @@ public class IEnumerableTest
     }
 
 }
+
