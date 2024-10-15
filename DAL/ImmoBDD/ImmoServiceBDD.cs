@@ -4,6 +4,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,16 @@ namespace DAL.ImmoBDD
 
         public void EnsureBDDCreated()
         {
-            this.context.Database.EnsureCreated();
+            if (this.context.Database.EnsureCreated())
+            {
+                // Lors de la créationde la BDD
+                var L1 = new LotDAO() { Reference = "12B", CodePostal = "86000", Ligne = "Rue des Lilas", Prix = 187987978M, RezDeChaussee = true, Ville = "Poitiers" };
+                var L2 = new LotDAO() { Reference = "13B", CodePostal = "86100", Ligne = "Rue des Orangers", Prix = 1987978M, RezDeChaussee = true, Ville = "Poitiers" };
+                this.context.Lots.Add(L1);
+                this.context.Lots.Add(L2);
+                this.context.SaveChanges();
+            }
+
         }
 
 

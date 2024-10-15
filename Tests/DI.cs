@@ -58,6 +58,9 @@ namespace Tests
                     o.Property(c => c.Reference).HasColumnName("Ref").IsRequired().HasMaxLength(20);
                     o.Property(c => c.Id).HasColumnName("PK_Lot");
                 });
+
+
+
             });
 
 
