@@ -53,7 +53,9 @@ namespace Tests
                 // Accès aux spécificités associées à l'entite LotDAO
                 modelBuilder.Entity<LotDAO>(o =>
                 {
-                    o.ToTable("Tbl_Lots");
+                    o.HasKey(c => c.Id);
+                    o.ToTable("Tbl_Lots"); //.HasDiscriminator("Disc",typeof(int)).HasValue(1);
+                    o.OwnsOne(c => c.Adresse).ToTable("Tbl_Adresses");
                     // Spécification de la colonne associée à Reference
                     o.Property(c => c.Reference).HasColumnName("Ref").IsRequired().HasMaxLength(20);
                     o.Property(c => c.Id).HasColumnName("PK_Lot");
@@ -61,9 +63,32 @@ namespace Tests
 
 
 
+                modelBuilder.Entity<LotVipDAO>(o =>
+                {
+
+                    o.ToTable("Tbl_LotsVips")
+                    .HasBaseType<LotDAO>();//.HasDiscriminator("Disc", typeof(int)).HasValue(2);
+                    // Spécification de la colonne associée à Reference
+                    o.Property(c => c.Reference).HasColumnName("Ref").IsRequired().HasMaxLength(20);
+                    o.Property(c => c.Id).HasColumnName("PK_Lot");
+                });
+                modelBuilder.Entity<ProprietaireDAO>(o =>
+                {
+                    o.HasKey(c => c.Id);
+                    o.ToTable("Tbl_Proprietaires"); //.HasDiscriminator("Disc",typeof(int)).HasValue(1);
+                    //o.OwnsOne(c => c.Adresse).ToTable("Tbl_Adresses");
+                });
+                modelBuilder.Entity<ProprieteDAO>(o =>
+                {
+                    o.HasKey(c => c.Id);
+                    //o.HasKey(c => new {LotId= c.Lot.Id, ProprietaireId=c.Proprietaire.Id });
+                    o.ToTable("Tbl_Proprietes");
+                });
+
+
+
+
             });
-
-
 
             #endregion
 

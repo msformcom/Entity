@@ -10,5 +10,6 @@ namespace Contrats
     {
         void EnsureBDDCreated();
         Task<IEnumerable<ISearchResult<string,ILot>>> GetLotsAsync(ISearchLotModel? search);
+      
     }
 }

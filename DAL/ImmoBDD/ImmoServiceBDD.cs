@@ -29,8 +29,14 @@ namespace DAL.ImmoBDD
             if (this.context.Database.EnsureCreated())
             {
                 // Lors de la créationde la BDD
-                var L1 = new LotDAO() { Reference = "12B", CodePostal = "86000", Ligne = "Rue des Lilas", Prix = 187987978M, RezDeChaussee = true, Ville = "Poitiers" };
-                var L2 = new LotDAO() { Reference = "13B", CodePostal = "86100", Ligne = "Rue des Orangers", Prix = 1987978M, RezDeChaussee = true, Ville = "Poitiers" };
+                var L1 = new LotDAO() {     Reference = "12B", 
+                                            Adresse = new AdresseDAO() { CodePostal = "86000", Ligne = "Rue des Lilas", Ville = "Poitiers" }, 
+                                            Prix = 187987978M, 
+                                            RezDeChaussee = true };
+                var L2 = new LotVipDAO() {  Reference = "13B", 
+                                            Adresse = new AdresseDAO() { CodePostal = "86100", Ligne = "Rue des Orangers", Ville = "Poitiers" }, 
+                                            Prix = 1987978M, RezDeChaussee = true, 
+                                            PisteAtterissageJet = true };
                 this.context.Lots.Add(L1);
                 this.context.Lots.Add(L2);
                 this.context.SaveChanges();
@@ -51,16 +57,16 @@ namespace DAL.ImmoBDD
 
 
             // Je dois accéder aux données
-            IQueryable<LotDAO> query = context.Lots;  // SELECT * FROM Lots
+            IQueryable<LotDAO> query = context.LotVips;  // SELECT * FROM Lots
             if (search != null)
             {
-                query = query.Where(c => c.CodePostal == search.CodePostal);
+                query = query.Where(c => c.Adresse.CodePostal == search.CodePostal);
 
             }
             var resultat = query.Select(c => new SearchResult<string, ILot>()
             {
                 Id = c.Reference,
-                Libelle = $"Bien immo à  {c.Ville}",
+                Libelle = $"Bien immo à  {c.Adresse.Ville}",
                 Description = $"Prix : {c.Prix: C}"
             } as ISearchResult<string, ILot>).AsEnumerable();
             return Task.FromResult(resultat);

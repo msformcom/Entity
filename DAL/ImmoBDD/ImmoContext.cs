@@ -51,5 +51,9 @@ namespace DAL.ImmoBDD
         }
 
         public DbSet<LotDAO>   Lots { get; set; }
+        public DbSet<LotVipDAO> LotVips { get; set; }
+
+        public DbSet<ProprieteDAO> Proprietes { get; set; }
+        public DbSet<ProprietaireDAO> Proprietaire { get; set; }
     }
 }
