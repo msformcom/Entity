@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 namespace DAL.ImmoBDD
 {
     // Formaliser la structure des infos dans la BDD
-    [Table("Tbl_Lots")] // ancienne méthode pour spécifier le nom de la table
+    //[Table("Tbl_Lots")] // ancienne méthode pour spécifier le nom de la table
     public  class LotDAO 
     {
+       
         public Guid Id { get; set; } = Guid.NewGuid();
 
         //[Column("Ref")]// ancienne méthode pour spécifier le nom de la colonne

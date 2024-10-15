@@ -15,10 +15,12 @@ namespace DAL.ImmoBDD
         private readonly DbContextOptions<ImmoContext> options;
         private ImmoContext context;
 
-        public ImmoServiceBDD(DbContextOptions<ImmoContext> options)
+        public ImmoServiceBDD(DbContextOptions<ImmoContext> options,
+                ModelCreation? modelCreation
+                )
         {
             this.options = options;
-            this.context = new ImmoContext(options);
+            this.context = new ImmoContext(options, modelCreation);
         }
 
         public void EnsureBDDCreated()

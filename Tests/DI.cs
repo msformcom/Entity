@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +46,22 @@ namespace Tests
             sc.AddSingleton<DbContextOptions<ImmoContext>>(options);
 
             sc.AddScoped<IDataImmo,ImmoServiceBDD>();
+
+            // Je spécifie les options de BDD qui seront prises en compte par le DbContext
+            sc.AddSingleton<ModelCreation>(modelBuilder =>
+            {
+                // Accès aux spécificités associées à l'entite LotDAO
+                modelBuilder.Entity<LotDAO>(o =>
+                {
+                    o.ToTable("Tbl_Lots");
+                    // Spécification de la colonne associée à Reference
+                    o.Property(c => c.Reference).HasColumnName("Ref").IsRequired().HasMaxLength(20);
+                    o.Property(c => c.Id).HasColumnName("PK_Lot");
+                });
+            });
+
+
+
             #endregion
 
             // Une fois les services ajoutés à la collection
