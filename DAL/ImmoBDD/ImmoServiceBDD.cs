@@ -1,4 +1,4 @@
-﻿using DAL.Interfaces;
+﻿using Contrats;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -19,6 +19,11 @@ namespace DAL.ImmoBDD
         {
             this.options = options;
             this.context = new ImmoContext(options);
+        }
+
+        public void EnsureBDDCreated()
+        {
+            this.context.Database.EnsureCreated();
         }
 
 
@@ -77,6 +82,16 @@ namespace DAL.ImmoBDD
                 _disposedValue = true;
             }
         }
+
+        // Destructeur => méthode appelée par le garbage collector
+        // lors de la destruction de l'espace méméoire associée à l'objet
+        ~ImmoServiceBDD()
+        {
+            Dispose(false);
+        }
+
+
+
         #endregion
     }
 }

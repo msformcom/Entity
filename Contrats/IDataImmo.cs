@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Interfaces
+namespace Contrats
 {
     public  interface IDataImmo
     {
+        void EnsureBDDCreated();
         Task<IEnumerable<ISearchResult<string,ILot>>> GetLotsAsync(ISearchLotModel? search);
     }
 }

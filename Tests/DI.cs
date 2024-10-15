@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Contrats;
+using DAL.ImmoBDD;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -28,9 +31,41 @@ namespace Tests
             sc.AddSingleton<IConfiguration>(config);
             #endregion
 
+            #region Configuration IDataImmo
+            // Construction des options destinées au context grace au DbContextOptionsBuilder
+            var optionsBuilder = new DbContextOptionsBuilder<ImmoContext>();
+
+            // Utilisation d'une méthpde d'extension du package Microsoft.EntityFrameworkCore.SqlServer
+            // Pour configurer les options avec provider SqlServer
+            optionsBuilder.UseSqlServer(config.GetConnectionString("ImmoBDD"));
+              
+
+
+            var options = optionsBuilder.Options;
+            sc.AddSingleton<DbContextOptions<ImmoContext>>(options);
+
+            sc.AddScoped<IDataImmo,ImmoServiceBDD>();
+            #endregion
+
             // Une fois les services ajoutés à la collection
             // je génère mon Service Provider
             Injector = sc.BuildServiceProvider();
+
+            // Vérifier que la BDD existe
+            // Création de scope
+            using (var scope = Injector.CreateScope())
+            {
+                // Les objets obtenus dans le cadre de ce scope
+                // seront disposés en sortant de ce bloc using
+                // Mode singleton dans ce scope
+                var immo=scope.ServiceProvider.GetRequiredService<IDataImmo>();
+                immo.EnsureBDDCreated();
+            }
+
+
+            
+
+
         }
 
     }
