@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Contrats\Contrats.csproj" />
+	  <InternalsVisibleTo Include="..\Tests\Test.csproj" />
   </ItemGroup>
 
 </Project>

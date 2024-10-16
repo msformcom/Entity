@@ -1,5 +1,7 @@
 ﻿
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ namespace DAL.ImmoBDD
         // provenant normalement du système injection de dépendance
         // provider, chaine de connection, authentification, journalisation, etc
         // et les fait passer au contructeur de la base
-        internal ImmoContext(
+        public ImmoContext(
                 DbContextOptions<ImmoContext> options,
                 ModelCreation? modelCreation
 
@@ -55,5 +57,25 @@ namespace DAL.ImmoBDD
 
         public DbSet<ProprieteDAO> Proprietes { get; set; }
         public DbSet<ProprietaireDAO> Proprietaire { get; set; }
+
+
+        public void DeleteProprietaire(Guid id)
+        {
+       
+            this.Database.ExecuteSqlRaw("EXEC DeleteProprietaire @a ", 
+                new SqlParameter[]
+            {
+                 new SqlParameter("@a",id)
+            });
+        }
+
+        public IQueryable<LotBaseDAO> GetLotsBasPrix(decimal prixmax)
+        {
+           return  this.Database.SqlQueryRaw<LotBaseDAO>("SELECT * FROM GetLotsBasPrix(@prix)", new SqlParameter[]
+            {
+                new SqlParameter("@prix",prixmax)
+            });
+            
+        }
     }
 }

@@ -29,17 +29,29 @@ namespace DAL.ImmoBDD
             if (this.context.Database.EnsureCreated())
             {
                 // Lors de la créationde la BDD
-                var L1 = new LotDAO() {     Reference = "12B", 
-                                            Adresse = new AdresseDAO() { CodePostal = "86000", Ligne = "Rue des Lilas", Ville = "Poitiers" }, 
-                                            Prix = 187987978M, 
-                                            RezDeChaussee = true };
-                var L2 = new LotVipDAO() {  Reference = "13B", 
-                                            Adresse = new AdresseDAO() { CodePostal = "86100", Ligne = "Rue des Orangers", Ville = "Poitiers" }, 
-                                            Prix = 1987978M, RezDeChaussee = true, 
-                                            PisteAtterissageJet = true };
+                var L1 = new LotDAO() { Reference = "12B",
+                    Adresse = new AdresseDAO() { CodePostal = "86000", Ligne = "Rue des Lilas", Ville = "Poitiers" },
+                    Prix = 187987978M,
+                    RezDeChaussee = true };
+                var L2 = new LotVipDAO() { Reference = "13B",
+                    Adresse = new AdresseDAO() { CodePostal = "86100", Ligne = "Rue des Orangers", Ville = "Poitiers" },
+                    Prix = 1987978M, RezDeChaussee = true,
+                    PisteAtterissageJet = true };
                 this.context.Lots.Add(L1);
                 this.context.Lots.Add(L2);
-                this.context.SaveChanges();
+
+
+                var P1 = new ProprietaireDAO() { Nom = "Mauras" };
+                var P2 = new ProprietaireDAO() { Nom = "Toto" };
+                context.Proprietaire.Add(P1);
+                context.Proprietaire.Add(P2);
+
+                var Pp1 = new ProprieteDAO() { Idlot = L1.Id, IdProprietaire = P2.Id, M2 = 100 };
+                var Pp2 = new ProprieteDAO() { Idlot = L1.Id, IdProprietaire = P1.Id, M2 = 110 };
+                var Pp3 = new ProprieteDAO() { Idlot = L2.Id, IdProprietaire = P1.Id, M2 = 110 };
+
+                context.Proprietes.AddRange(new List<ProprieteDAO> { Pp1, Pp2, Pp3 });
+                context.SaveChanges();
             }
 
         }
@@ -57,7 +69,8 @@ namespace DAL.ImmoBDD
 
 
             // Je dois accéder aux données
-            IQueryable<LotDAO> query = context.LotVips;  // SELECT * FROM Lots
+            IQueryable<LotDAO> query = context.Lots;
+                //.Include(c=>c.Proprietes).ThenInclude(c=>c.Proprietaire);  // SELECT * FROM Lots
             if (search != null)
             {
                 query = query.Where(c => c.Adresse.CodePostal == search.CodePostal);
@@ -67,7 +80,7 @@ namespace DAL.ImmoBDD
             {
                 Id = c.Reference,
                 Libelle = $"Bien immo à  {c.Adresse.Ville}",
-                Description = $"Prix : {c.Prix: C}"
+                Description = String.Join(",", c.Proprietes.Select(c=>c.Proprietaire.Nom))
             } as ISearchResult<string, ILot>).AsEnumerable();
             return Task.FromResult(resultat);
 
